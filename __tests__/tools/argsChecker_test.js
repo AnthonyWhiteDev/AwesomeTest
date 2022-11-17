@@ -1,3 +1,5 @@
+'use strict';
+
 const ArgsChecker = require('../../src/tools/argsChecker');
 
 class MockProgramArgumentsProvider extends ArgsChecker.ProgramArgumentsProvider {

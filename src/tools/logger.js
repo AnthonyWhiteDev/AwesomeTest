@@ -1,4 +1,6 @@
-let doDebug = process.env.DEBUG && (process.env.DEBUG==1);
+'use strict';
+
+let doDebug = process.env.DEBUG && (process.env.DEBUG == 1);
 
 /* istanbul ignore next */
 function debug(message) {
