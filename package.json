@@ -12,5 +12,15 @@
   "eslintConfig": {},
   "scripts": {
     "test": "jest"
+  },
+  "jest": {
+    "onlyChanged":  true,
+    "collectCoverage": true,
+    "collectCoverageFrom": [ "./src/**" ],
+    "coverageThreshold": {
+      "global": {
+        "statements": 100
+      }
+    }
   }
 }
