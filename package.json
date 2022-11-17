@@ -3,6 +3,14 @@
   "version": "0.0.0",
   "description": "AwesomeTest",
   "author": {
-    "name": ""
+    "name": "AthpnyWhitedev"
+  },
+  "devDependencies": {
+    "eslint": "^8.21.0",
+    "jest": "^29.3.1"
+  },
+  "eslintConfig": {},
+  "scripts": {
+    "test": "jest"
   }
 }
