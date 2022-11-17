@@ -44,11 +44,13 @@ class ActualProgramArgumentsProvider extends ProgramArgumentsProvider {
  * Check the number of program arguments used. Does not take in count the first two unnecessary ones.
  * */
 function getProgramArguments(nMininmumArgs, nMaximumArgs, programArgumentsProvider) {
-    const argv = programArgumentsProvider.provideProgramArguments();
-    const argvLength = argv.length;
+    let argv = programArgumentsProvider.provideProgramArguments()
+    let argvLength = argv.length;
+    argv = argv.splice(2, argvLength);
+    argvLength -= 2;
     if ((argvLength < nMininmumArgs) || (argvLength > nMaximumArgs))
-        throw new InvalidNumberOfArgumentsError(nMaximumArgs-2, nMaximumArgs-2, argvLength-2);
-    return argv.splice(2, argvLength);
+        throw new InvalidNumberOfArgumentsError(nMaximumArgs, nMaximumArgs, argvLength);
+    return argv;
 }
 
 module.exports = { getProgramArguments, ProgramArgumentsProvider, ActualProgramArgumentsProvider, InvalidNumberOfArgumentsError };
