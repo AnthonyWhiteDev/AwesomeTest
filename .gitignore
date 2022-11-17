@@ -1,24 +1,5 @@
-# Created by https://www.toptal.com/developers/gitignore/api/visualstudio,node,maven
-# Edit at https://www.toptal.com/developers/gitignore?templates=visualstudio,node,maven
-
-### Maven ###
-target/
-pom.xml.tag
-pom.xml.releaseBackup
-pom.xml.versionsBackup
-pom.xml.next
-release.properties
-dependency-reduced-pom.xml
-buildNumber.properties
-.mvn/timing.properties
-# https://github.com/takari/maven-wrapper#usage-without-binary-jar
-.mvn/wrapper/maven-wrapper.jar
-
-# Eclipse m2e generated files
-# Eclipse Core
-.project
-# JDT-specific (Eclipse Java Development Tools)
-.classpath
+# Created by https://www.toptal.com/developers/gitignore/api/visualstudio,node
+# Edit at https://www.toptal.com/developers/gitignore?templates=visualstudio,node
 
 ### Node ###
 # Logs
@@ -559,7 +540,7 @@ FodyWeavers.xsd
 ### VisualStudio Patch ###
 # Additional files built by Visual Studio
 
-# End of https://www.toptal.com/developers/gitignore/api/visualstudio,node,maven
+# End of https://www.toptal.com/developers/gitignore/api/visualstudio,node
 
 AwesomeTest.njsproj
 AwesomeTest.njsproj.user
