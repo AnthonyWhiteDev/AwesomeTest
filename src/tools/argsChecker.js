@@ -28,6 +28,26 @@ class InvalidNumberOfArgumentsError extends Error {
 }
 
 /**
+ * Error thrown when an invalid (null?) ProgramArgumentsProvider is fed to getProgramArguments.
+ * */
+class InvalidProgramArgumentsProviderError extends Error {
+    constructor() {
+        super(`Invalid ProgramArgumentsProvider`);
+        this.name = "InvalidProgramArgumentsProvider";
+    }
+}
+
+/**
+ * Error thrown when a ProgramArgumentsProvider fails to use provideProgramArguments.
+ * */
+class ProgramArgumentsProvisionError extends Error {
+    constructor() {
+        super(`provideProgramArguments() method in ProgramArgumentsProvider failed.`);
+        this.name = "ProgramArgumentsProvisionError";
+    }
+}
+
+/**
  * Objects providing the program arguments.
  * */
 class ProgramArgumentsProvider {
@@ -56,13 +76,22 @@ class ActualProgramArgumentsProvider extends ProgramArgumentsProvider {
  * Check the number of program arguments used.
  * Does not take in count the unnecessary two first.
  * Throws an InvalidNumberOfArgumentsError if nMinimumArgs is not null and the number of arguments provided is lesser, or if nMaximumArgs is not null and the number of arguments provided is greater.
+ * Throws an InvalidArgumentsListError if programArgumentsProvider is null or fails to produce arguments.
  * @param {list<string>} programArgumentsProvider The program arguments provider. Must implement a 'provideProgramArguments()' method returning a list of strings.
  * @param {number} nMininmumArgs The minimum number of arguments expected. Can be null if no mininmum.
  * @param {number} nMininmumArgs The minimum number of arguments expected. Can be null if no maximum.
  * @returns {list<string>} The program arguments minus the two first.
  * */
-function getProgramArguments(programArgumentsProvider, nMininmumArgs=null, nMaximumArgs=null) {
-    let argv = programArgumentsProvider.provideProgramArguments()
+function getProgramArguments(programArgumentsProvider, nMininmumArgs = null, nMaximumArgs = null) {
+    let argv;
+    if (programArgumentsProvider === null)
+        throw new InvalidProgramArgumentsProviderError();
+    try {
+        argv = programArgumentsProvider.provideProgramArguments();
+    }
+    catch (Error) {
+        throw new ProgramArgumentsProvisionError();
+    }
     let argvLength = argv.length;
     argv = argv.splice(2, argvLength);
     argvLength -= 2;
@@ -77,4 +106,4 @@ function getProgramArguments(programArgumentsProvider, nMininmumArgs=null, nMaxi
  * */
 function setProgramArguments(argumentsList, expectedArgumentsDescription) { }
 
-module.exports = { getProgramArguments, ProgramArgumentsProvider, ActualProgramArgumentsProvider, InvalidNumberOfArgumentsError };
+module.exports = { getProgramArguments, ProgramArgumentsProvider, ActualProgramArgumentsProvider, InvalidNumberOfArgumentsError, InvalidProgramArgumentsProviderError, ProgramArgumentsProvisionError };

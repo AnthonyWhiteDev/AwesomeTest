@@ -95,3 +95,15 @@ test('getProgramArguments does not throw if nMaximumArguments is null and nMinim
         expect(() => ArgsChecker.getProgramArguments(new MockProgramArgumentsProvider(Array(10 + Math.floor(Math.random() * 1001)).fill(0)), null, null)).not.toThrow(ArgsChecker.InvalidNumberOfArgumentsError);
     }
 });
+
+test('getProgramArguments throws if Invalid ProgramArgumentsProvider', () => {
+    for (let i = 0; i < 1000; i++) {
+        expect(()=>ArgsChecker.getProgramArguments(null, null, null)).toThrow(ArgsChecker.InvalidProgramArgumentsProviderError);
+    }
+});
+
+test('getProgramArguments throws if provideProgramArguments fails', () => {
+    for (let i = 0; i < 1000; i++) {
+        expect(() => ArgsChecker.getProgramArguments(new ArgsChecker.ProgramArgumentsProvider(), null, null)).toThrow(ArgsChecker.ProgramArgumentsProvisionError);
+    }
+});
