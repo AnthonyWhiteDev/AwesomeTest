@@ -3,16 +3,6 @@
 const logger = require('./logger');
 
 /**
- * Filter used to pick only the animals whose names contain this string (if not null, otherwise every animal is picked).
- * */
-let animalNamesFilter = null;
-
-/**
- * Does the number of picked animals should be appended to the name of their owner.
- * */
-let doCount = false;
-
-/**
  * Error thrown when an invalid number of arguments is passed to checker of program arguments.
  * */
 class InvalidNumberOfArgumentsError extends Error {
@@ -102,8 +92,27 @@ function getProgramArguments(programArgumentsProvider, nMininmumArgs = null, nMa
 
 /**
  * Check if expected arguments are present in the given list, and extract their values.
- * @param argumentsList
+ * @param {list<string>}                argumentsList   List of strings representing the raw program arguments, without any parsing.
+ * @return {Object.<string, string>}                    Object containing the pairs of key/value found in the argumentList.
  * */
-function setProgramArguments(argumentsList, expectedArgumentsDescription) { }
+function setProgramArguments(argumentsList) {
+    // TODO Test if argumentsList is null and say it in doc, and test it
+    return argumentsList.reduce((previous, current) => {
+        let key;
+        const index = current.indexOf('=');
+        const equalSignUsed = index != -1;
 
-module.exports = { getProgramArguments, ProgramArgumentsProvider, ActualProgramArgumentsProvider, InvalidNumberOfArgumentsError, InvalidProgramArgumentsProviderError, ProgramArgumentsProvisionError };
+        if (equalSignUsed) key = current.substring(0, index);
+        else key = current;
+
+        if ((key.length > 2) && key.startsWith('--')) {
+            key = key.substring(2, key.length);
+            previous[key] = equalSignUsed ? current.substring(index + 1, current.length) : true;
+        }
+        // TODO else throw something, test and say it
+
+        return previous;
+    }, {});
+}
+
+module.exports = { getProgramArguments, ProgramArgumentsProvider, ActualProgramArgumentsProvider, InvalidNumberOfArgumentsError, InvalidProgramArgumentsProviderError, ProgramArgumentsProvisionError, setProgramArguments };
