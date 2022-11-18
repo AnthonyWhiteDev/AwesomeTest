@@ -11,7 +11,7 @@ try {
 }
 catch (Error) {
     //TODO explicit help
-    return;
+    process.exit(1);
 }
 Logger.debug(args);
 
