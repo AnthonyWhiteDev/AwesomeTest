@@ -2,15 +2,12 @@
 
 const logger = require('./logger');
 
-/**
- * Filter used to pick only the animals whose names contain this string (if not null, otherwise every animal is picked).
- * */
-let animalNamesFilter = null;
 
-/**
- * Does the number of picked animals should be appended to the name of their owner.
- * */
-let doCount = false;
+
+
+////////////
+// Errors //
+////////////
 
 /**
  * Error thrown when an invalid number of arguments is passed to checker of program arguments.
@@ -48,6 +45,23 @@ class ProgramArgumentsProvisionError extends Error {
 }
 
 /**
+ * Error thrown when a ProgramArgument provided is malformatted.
+ * */
+class MalformattedProgramArgumentProvidedError extends Error {
+    constructor(malformattedArgument) {
+        super(`Malformatted program argument provided: ${malformattedArgument}\nArguments must respond to the format '--value' or '--key=value'.`);
+        this.name = "MalformattedProgramArgumentProvidedError";
+    }
+}
+
+
+
+
+/////////////
+// Classes //
+/////////////
+
+/**
  * Objects providing the program arguments.
  * */
 class ProgramArgumentsProvider {
@@ -72,6 +86,13 @@ class ActualProgramArgumentsProvider extends ProgramArgumentsProvider {
     }
 }
 
+
+
+
+///////////////
+// Functions //
+///////////////
+
 /**
  * Check the number of program arguments used.
  * Does not take in count the unnecessary two first.
@@ -82,7 +103,7 @@ class ActualProgramArgumentsProvider extends ProgramArgumentsProvider {
  * @param {number} nMininmumArgs The minimum number of arguments expected. Can be null if no maximum.
  * @returns {list<string>} The program arguments minus the two first.
  * */
-function getProgramArguments(programArgumentsProvider, nMininmumArgs = null, nMaximumArgs = null) {
+function getProgramArguments(programArgumentsProvider, nMinimumArgs = null, nMaximumArgs = null) {
     let argv;
     if (programArgumentsProvider === null)
         throw new InvalidProgramArgumentsProviderError();
@@ -95,15 +116,40 @@ function getProgramArguments(programArgumentsProvider, nMininmumArgs = null, nMa
     let argvLength = argv.length;
     argv = argv.splice(2, argvLength);
     argvLength -= 2;
-    if (((nMininmumArgs !== null) && (argvLength < nMininmumArgs)) || (((nMaximumArgs !== null) && (argvLength > nMaximumArgs))))
-        throw new InvalidNumberOfArgumentsError(nMaximumArgs, nMaximumArgs, argvLength);
+    if (((nMinimumArgs !== null) && (argvLength < nMinimumArgs)) || (((nMaximumArgs !== null) && (argvLength > nMaximumArgs))))
+        throw new InvalidNumberOfArgumentsError(nMinimumArgs, nMaximumArgs, argvLength);
     return argv;
 }
 
 /**
- * Check if expected arguments are present in the given list, and extract their values.
- * @param argumentsList
+ * Extract pairs of arguments key/value from a list of arguments.
+ * Arguments have to be '--value' or '--key=value'.
+ * Throws MalformattedProgramArgumentProvidedError if at least one malformatted argument is provided.
+ * @param {list<string>}                argumentsList   List of strings representing the raw program arguments, without any parsing. If null an empty list will be returned.
+ * @return {Object.<string, string | boolean>}                    Object containing the pairs of key/value found in the argumentsList. Empty if argumentsList parameter is null.
  * */
-function setProgramArguments(argumentsList, expectedArgumentsDescription) { }
+function parseProgramArguments(argumentsList) {
+    if (argumentsList === null) return [];
 
-module.exports = { getProgramArguments, ProgramArgumentsProvider, ActualProgramArgumentsProvider, InvalidNumberOfArgumentsError, InvalidProgramArgumentsProviderError, ProgramArgumentsProvisionError };
+    return argumentsList.reduce((previous, current) => {
+        let key;
+        const index = current.indexOf('=');
+        const equalSignUsed = index != -1;
+
+        if (equalSignUsed) key = current.substring(0, index);
+        else key = current;
+
+        if ((key.length > 2) && key.startsWith('--')) {
+            if (equalSignUsed) {
+                if (current.length > index + 1) previous[key.substring(2, index)] = current.substring(index + 1, current.length);
+                else throw new MalformattedProgramArgumentProvidedError(current);
+            }
+            else previous[key.substring(2, key.length)] = true;
+        }
+        else throw new MalformattedProgramArgumentProvidedError(current);
+
+        return previous;
+    }, {});
+}
+
+module.exports = { getProgramArguments, ProgramArgumentsProvider, ActualProgramArgumentsProvider, InvalidNumberOfArgumentsError, InvalidProgramArgumentsProviderError, ProgramArgumentsProvisionError, parseProgramArguments, MalformattedProgramArgumentProvidedError };
