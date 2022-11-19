@@ -1,5 +1,7 @@
 'use strict';
 
+/* istanbul ignore file */
+
 /**
  * Is true only if an environment variable called DEBUG is set and equal to 1.
  * Used to define if debug(message) function should be active.
