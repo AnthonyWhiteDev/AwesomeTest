@@ -72,6 +72,15 @@ test('getProgramArguments does not test maximum number of arguments if nMaximumA
     }
 });
 
+test('getProgramArguments does not test maximum number of arguments if nMaximumArguments is not provided', () => {
+    for (let i = 0; i < TEST_POWER; i++) {
+        let min = 2 + Math.floor(Math.random() * 100001);
+        let size = min + Math.floor(Math.random() * 100001);
+        min -= 2;
+        expect(() => ArgsChecker.getProgramArguments(new MockProgramArgumentsProvider(Array(size).fill(0)), min)).not.toThrow(ArgsChecker.InvalidNumberOfArgumentsError);
+    }
+});
+
 test('getProgramArguments still throws if nMinimumArguments is null and nMaximumArguments is not null and under arguments length', () => {
     for (let i = 0; i < TEST_POWER; i++) {
         let min = 2 + Math.floor(Math.random() * 100001);
@@ -94,6 +103,12 @@ test('getProgramArguments still throws if nMaximumArguments is null and nMinimum
 test('getProgramArguments does not throw if nMaximumArguments is null and nMinimumArguments is null', () => {
     for (let i = 0; i < TEST_POWER; i++) {
         expect(() => ArgsChecker.getProgramArguments(new MockProgramArgumentsProvider(Array(10 + Math.floor(Math.random() * 100001)).fill(0)), null, null)).not.toThrow(ArgsChecker.InvalidNumberOfArgumentsError);
+    }
+});
+
+test('getProgramArguments does not throw if nMaximumArguments and nMinimumArguments are not provided', () => {
+    for (let i = 0; i < TEST_POWER; i++) {
+        expect(() => ArgsChecker.getProgramArguments(new MockProgramArgumentsProvider(Array(10 + Math.floor(Math.random() * 100001)).fill(0)))).not.toThrow(ArgsChecker.InvalidNumberOfArgumentsError);
     }
 });
 
