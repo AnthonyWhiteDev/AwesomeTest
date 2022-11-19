@@ -28,4 +28,4 @@ jobs:
     - run: npx eslint src/ __tests__/
     - run: npm ci
     - run: npm run build --if-present
-    - run: npm test
+    - run: export TESTPOWER=1000 && npm test

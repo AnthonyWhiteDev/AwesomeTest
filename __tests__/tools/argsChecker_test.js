@@ -1,7 +1,7 @@
 'use strict';
 
 const ArgsChecker = require('../../src/tools/argsChecker');
-const TEST_POWER = require('../../__tests__/config').TEST_POWER;
+const TEST_POWER = require('../test_config').TEST_POWER;
 
 class MockProgramArgumentsProvider extends ArgsChecker.ProgramArgumentsProvider {
     constructor(args) {

@@ -16,7 +16,7 @@
   "jest": {
     "collectCoverage": true,
     "collectCoverageFrom": [ "./src/**" ],
-    "modulePathIgnorePatterns": [ "./__tests__/config.js" ],
+    "modulePathIgnorePatterns": [ "./__tests__/test_config.js" ],
     "coverageThreshold": {
       "global": {
         "statements": 100,
