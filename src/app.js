@@ -25,7 +25,14 @@ catch (Error) {
 }
 Logger.debug(parsedArgs);
 
-const data = require('../data.js.txt').data;
+let data;
+try {
+    data = require('../data.js.txt').data;
+}
+catch (Error) {
+    console.error(Error);
+    process.exit(1);
+}
 Logger.debug(data);
 
 /**
@@ -33,10 +40,19 @@ Logger.debug(data);
  * */
 let animalNamesFilter = parsedArgs['filter'];
 Logger.debug(animalNamesFilter);
+const animalNamesFilterType = typeof(animalNamesFilter);
+if ((animalNamesFilterType !== 'undefined') && (animalNamesFilterType !== 'string')) {
+    console.error(`Error: "filter" option must be a proper string option. Please use "--filter=<value>" or nothing.`);
+    process.exit(1);
+}
 
 /**
  * Does the number of picked animals should be appended to the name of their owner.
  * */
 let doCount = parsedArgs['count'];
 Logger.debug(doCount);
-// TODO test if count is a boolean or not
+const doCountType = typeof (doCount);
+if ((doCountType !== 'undefined') && (doCountType != 'boolean')) {
+    console.error(`Error: "count" option must be a proper boolean option. Please use "--count" or nothing.`);
+    process.exit(1);
+}
