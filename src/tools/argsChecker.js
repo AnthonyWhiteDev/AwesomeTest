@@ -38,6 +38,16 @@ class ProgramArgumentsProvisionError extends Error {
 }
 
 /**
+ * Error thrown when a ProgramArgument provided is malformatted.
+ * */
+class MalformattedProgramArgumentProvidedError extends Error {
+    constructor(malformattedArgument) {
+        super(`Malformatted program argument provided: ${malformattedArgument}\nArguments must respond to the format '--value' or '--key=value'.`);
+        this.name = "MalformattedProgramArgumentProvidedError";
+    }
+}
+
+/**
  * Objects providing the program arguments.
  * */
 class ProgramArgumentsProvider {
@@ -72,7 +82,7 @@ class ActualProgramArgumentsProvider extends ProgramArgumentsProvider {
  * @param {number} nMininmumArgs The minimum number of arguments expected. Can be null if no maximum.
  * @returns {list<string>} The program arguments minus the two first.
  * */
-function getProgramArguments(programArgumentsProvider, nMininmumArgs = null, nMaximumArgs = null) {
+function getProgramArguments(programArgumentsProvider, nMinimumArgs = null, nMaximumArgs = null) {
     let argv;
     if (programArgumentsProvider === null)
         throw new InvalidProgramArgumentsProviderError();
@@ -85,18 +95,20 @@ function getProgramArguments(programArgumentsProvider, nMininmumArgs = null, nMa
     let argvLength = argv.length;
     argv = argv.splice(2, argvLength);
     argvLength -= 2;
-    if (((nMininmumArgs !== null) && (argvLength < nMininmumArgs)) || (((nMaximumArgs !== null) && (argvLength > nMaximumArgs))))
-        throw new InvalidNumberOfArgumentsError(nMaximumArgs, nMaximumArgs, argvLength);
+    if (((nMinimumArgs !== null) && (argvLength < nMinimumArgs)) || (((nMaximumArgs !== null) && (argvLength > nMaximumArgs))))
+        throw new InvalidNumberOfArgumentsError(nMinimumArgs, nMaximumArgs, argvLength);
     return argv;
 }
 
 /**
- * Check if expected arguments are present in the given list, and extract their values.
- * @param {list<string>}                argumentsList   List of strings representing the raw program arguments, without any parsing.
- * @return {Object.<string, string>}                    Object containing the pairs of key/value found in the argumentList.
+ * Extract pairs of arguments key/value from a list of arguments.
+ * Arguments has to be '--value' or '--key=value'. If no '--' at the beginning of an argument, it will be ignored.
+ * @param {list<string>}                argumentsList   List of strings representing the raw program arguments, without any parsing. If null an empty list will be returned.
+ * @return {Object.<string, string>}                    Object containing the pairs of key/value found in the argumentsList. Empty if argumentsList parameter is null.
  * */
-function setProgramArguments(argumentsList) {
-    // TODO Test if argumentsList is null and say it in doc, and test it
+function parseProgramArguments(argumentsList) {
+    if (argumentsList === null) return [];
+
     return argumentsList.reduce((previous, current) => {
         let key;
         const index = current.indexOf('=');
@@ -106,13 +118,16 @@ function setProgramArguments(argumentsList) {
         else key = current;
 
         if ((key.length > 2) && key.startsWith('--')) {
-            key = key.substring(2, key.length);
-            previous[key] = equalSignUsed ? current.substring(index + 1, current.length) : true;
+            if (equalSignUsed) {
+                if (current.length > index + 1) previous[key.substring(2, index)] = current.substring(index + 1, current.length);
+                else throw new MalformattedProgramArgumentProvidedError(current);
+            }
+            else previous[key.substring(2, key.length)] = true;
         }
-        // TODO else throw something, test and say it
+        else throw new MalformattedProgramArgumentProvidedError(current);
 
         return previous;
     }, {});
 }
 
-module.exports = { getProgramArguments, ProgramArgumentsProvider, ActualProgramArgumentsProvider, InvalidNumberOfArgumentsError, InvalidProgramArgumentsProviderError, ProgramArgumentsProvisionError, setProgramArguments };
+module.exports = { getProgramArguments, ProgramArgumentsProvider, ActualProgramArgumentsProvider, InvalidNumberOfArgumentsError, InvalidProgramArgumentsProviderError, ProgramArgumentsProvisionError, parseProgramArguments, MalformattedProgramArgumentProvidedError };

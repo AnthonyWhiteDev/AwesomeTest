@@ -10,17 +10,17 @@ try {
     args = ArgsChecker.getProgramArguments(new ArgsChecker.ActualProgramArgumentsProvider(), 1, 2);
 }
 catch (Error) {
-    //TODO explicit help
+    console.error(Error);
     process.exit(1);
 }
 Logger.debug(args);
 
 let parsedArgs;
 try {
-    parsedArgs = ArgsChecker.setProgramArguments(args);
+    parsedArgs = ArgsChecker.parseProgramArguments(args);
 }
 catch (Error) {
-    //TODO explicit help
+    console.error(Error);
     process.exit(1);
 }
 Logger.debug(parsedArgs);
