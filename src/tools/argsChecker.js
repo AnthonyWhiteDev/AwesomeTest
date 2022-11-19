@@ -2,6 +2,13 @@
 
 const logger = require('./logger');
 
+
+
+
+////////////
+// Errors //
+////////////
+
 /**
  * Error thrown when an invalid number of arguments is passed to checker of program arguments.
  * */
@@ -47,6 +54,13 @@ class MalformattedProgramArgumentProvidedError extends Error {
     }
 }
 
+
+
+
+/////////////
+// Classes //
+/////////////
+
 /**
  * Objects providing the program arguments.
  * */
@@ -71,6 +85,13 @@ class ActualProgramArgumentsProvider extends ProgramArgumentsProvider {
         return process.argv;
     }
 }
+
+
+
+
+///////////////
+// Functions //
+///////////////
 
 /**
  * Check the number of program arguments used.
