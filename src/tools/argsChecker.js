@@ -125,31 +125,32 @@ function getProgramArguments(programArgumentsProvider, nMinimumArgs = null, nMax
  * Extract pairs of arguments key/value from a list of arguments.
  * Arguments have to be '--value' or '--key=value'.
  * Throws MalformattedProgramArgumentProvidedError if at least one malformatted argument is provided.
- * @param {list<string>}                argumentsList   List of strings representing the raw program arguments, without any parsing. If null an empty list will be returned.
- * @return {Object.<string, string | boolean>}                    Object containing the pairs of key/value found in the argumentsList. Empty if argumentsList parameter is null.
+ * @param {list<string>}                        argumentsList   List of strings representing the raw program arguments, without any parsing. If null an empty list will be returned.
+ * @return {Object.<string, string | boolean>}                  Object containing the pairs of key/value found in the argumentsList. Empty if argumentsList parameter is null.
  * */
 function parseProgramArguments(argumentsList) {
     if (argumentsList === null) return [];
 
-    return argumentsList.reduce((previous, current) => {
+    const result = {};
+    argumentsList.forEach(rawArgument => {
         let key;
-        const index = current.indexOf('=');
+        const index = rawArgument.indexOf('=');
         const equalSignUsed = index != -1;
 
-        if (equalSignUsed) key = current.substring(0, index);
-        else key = current;
+        if (equalSignUsed) key = rawArgument.substring(0, index);
+        else key = rawArgument;
 
         if ((key.length > 2) && key.startsWith('--')) {
             if (equalSignUsed) {
-                if (current.length > index + 1) previous[key.substring(2, index)] = current.substring(index + 1, current.length);
-                else throw new MalformattedProgramArgumentProvidedError(current);
+                if (rawArgument.length > index + 1) result[key.substring(2, index)] = rawArgument.substring(index + 1, rawArgument.length);
+                else throw new MalformattedProgramArgumentProvidedError(rawArgument);
             }
-            else previous[key.substring(2, key.length)] = true;
+            else result[key.substring(2, key.length)] = true;
         }
-        else throw new MalformattedProgramArgumentProvidedError(current);
+        else throw new MalformattedProgramArgumentProvidedError(rawArgument);
+    });
 
-        return previous;
-    }, {});
+    return result;
 }
 
 module.exports = { getProgramArguments, ProgramArgumentsProvider, ActualProgramArgumentsProvider, InvalidNumberOfArgumentsError, InvalidProgramArgumentsProviderError, ProgramArgumentsProvisionError, parseProgramArguments, MalformattedProgramArgumentProvidedError };
