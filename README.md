@@ -76,10 +76,11 @@ The processing can have two roles:
 At least one of those two options must be used. No particular order in the usage of the options is needed.
 
 ## Usage
-`node src/app.js [--filter=<value>] [--count]`  
+`node src/app.js [--filter=<value>] [--count] [--help]`  
 Please provide at least one of those options.  
 The `<value>` of the `--filter` option must be a string.  
 The `--count` option does not take any additionnal value.
+The `--help` option does not take any additionnal value.
 
 ## Lint
 `npx eslint src/ __tests__/`
