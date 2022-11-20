@@ -12,7 +12,7 @@
 ## Explanation
 
 This application processes the data found in the file `./data.js.txt`. This data must be formatted as this example:  
-```json
+```javascript
 const data = [{
   name: 'Dillauti',
   people:
