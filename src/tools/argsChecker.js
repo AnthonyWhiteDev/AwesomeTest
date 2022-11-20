@@ -125,8 +125,8 @@ function getProgramArguments(programArgumentsProvider, nMinimumArgs = null, nMax
  * Extract pairs of arguments key/value from a list of arguments.
  * Arguments have to be '--value' or '--key=value'.
  * Throws MalformattedProgramArgumentProvidedError if at least one malformatted argument is provided.
- * @param {list<string>}                        argumentsList   List of strings representing the raw program arguments, without any parsing. If null an empty list will be returned.
- * @return {Object.<string, string | boolean>}                  Object containing the pairs of key/value found in the argumentsList. Empty if argumentsList parameter is null.
+ * @param  {list<string>}                        argumentsList   List of strings representing the raw program arguments, without any parsing. If null an empty list will be returned.
+ * @return {Object.<string, string | boolean>}                   Object containing the pairs of key/value found in the argumentsList. Empty if argumentsList parameter is null.
  * */
 function parseProgramArguments(argumentsList) {
     if (argumentsList === null) return [];
