@@ -1,7 +1,15 @@
 # AwesomeTest
 
-# TODO
-img shields
+![CI badge](https://img.shields.io/badge/CI-pass-green?style=for-the-badge) ![Coverage badge](https://img.shields.io/badge/coverage-100-green?style=for-the-badge)
+
+## Table of Content
+
+- [Explanation](#Explanation)
+- [Usage](#Usage)
+- [Lint](#Lint)
+- [Test](#Test)
+
+## Explanation
 
 This application processes the data found in the file `./data.js.txt`. This data must be formatted as this example:  
 ```json
@@ -67,14 +75,14 @@ The processing can have two roles:
 
 At least one of those two options must be used. No particular order in the usage of the options is needed.
 
-# Usage
+## Usage
 `node src/app.js [--filter=<value>] [--count]`  
 Please provide at least one of those options.  
 The `<value>` of the `--filter` option must be a string.  
 The `--count` option does not take any additionnal value.
 
-# Lint
+## Lint
 `npx eslint src/ __tests__/`
 
-# Test
+## Test
 `npm test`
