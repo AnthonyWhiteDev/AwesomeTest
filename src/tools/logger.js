@@ -10,11 +10,11 @@ const doDebug = process.env.DEBUG && (process.env.DEBUG == 1);
 
 /* istanbul ignore next */
 /**
- * Logs a message to standard output only if doDebug is true.
- * @param {*} message The thing to log.
+ * Logs messages to standard output only if doDebug is true.
+ * @param {...*} message The things to log.
  * */
-function debug(message) {
-    if(doDebug) console.log(message);
+function debug(...messages) {
+    if(doDebug) console.log(...messages);
 }
 
 module.exports = { doDebug, debug };
