@@ -113,17 +113,24 @@ module.exports = {
 '''
 
 The processing can have two roles:  
-- Filtering the elements according to the '--filter' option, if used;
-- Counting the elements if the option '--count' is used.
+* Filtering the elements according to the '--filter' option, if used;
+* Counting the elements if the option '--count' is used.
 
 At least one of those two options must be used. No particular order in the usage of the options is needed.
 
 ## Usage
-'node src / app.js[--filter=<value>] [--count] [--help]'
-Please provide at least one of those options.
-The '<value>' of the '--filter' option must be a string.
-The '--count' option does not take any additionnal value.
-The '--help' option does not take any additionnal value.
+'node src/app.js [--filter=<value>] [--count] [--help]'
+
+### Options
+
+* '--filter = <value>' Filter the animals to be considering by this filter. Only the animals those names contain this string will be considered. The '<value>' of the '--filter' option must be a string.
+
+* '--count' Displays the count of elements under an element(animals for a person, people for a country).The '--count' option does not take any additionnal value.
+
+* '--help' Displays this message.
+
+Please provide at least one of those options and maximum 2. '--filter' and '--count' can be combined.
+
 
 ## Lint
 'npx eslint src/ __tests__/''

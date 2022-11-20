@@ -77,10 +77,16 @@ At least one of those two options must be used. No particular order in the usage
 
 ## Usage
 `node src/app.js [--filter=<value>] [--count] [--help]`  
-Please provide at least one of those options.  
-The `<value>` of the `--filter` option must be a string.  
-The `--count` option does not take any additionnal value.
-The `--help` option does not take any additionnal value.
+
+### Options
+
+- `--filter=<value>` Filter the animals to be considering by this filter. Only the animals those names contain this string will be considered. The `<value>` of the `--filter` option must be a string.  
+
+- `--count` Displays the count of elements under an element (animals for a person, people for a country). The `--count` option does not take any additionnal value.
+
+- `--help` Displays this message.
+
+Please provide at least one of those options and maximum 2. `--filter` and `--count` can be combined.
 
 ## Lint
 `npx eslint src/ __tests__/`
