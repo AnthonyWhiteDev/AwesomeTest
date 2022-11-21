@@ -1,6 +1,6 @@
 # AwesomeTest
 
-![CI badge](https://img.shields.io/badge/CI-pass-green?style=for-the-badge) ![Coverage badge](https://img.shields.io/badge/COVERAGE-100%25-green?style=for-the-badge)
+![CI badge](https://img.shields.io/badge/CI-pass-green?style=for-the-badge) ![Coverage badge](https://img.shields.io/badge/COVERAGE-100%25-green?style=for-the-badge) ![Fun badge](https://img.shields.io/badge/FUN-100%25-green?style=for-the-badge)
 
 ## Table of Content
 
