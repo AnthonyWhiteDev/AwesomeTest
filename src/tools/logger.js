@@ -8,7 +8,6 @@
  * */
 const doDebug = process.env.DEBUG && (process.env.DEBUG == 1);
 
-/* istanbul ignore next */
 /**
  * Logs messages to standard output only if doDebug is true.
  * @param {...*} message The things to log.
