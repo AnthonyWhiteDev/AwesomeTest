@@ -218,47 +218,7 @@ if (dataType != 'object') {
 /** The result list of countries once the data has been processed.
  * @type {List<Object.<string, string | List<Object.<string, string | List<Object.<string, string>>>>>>}
  * */
-const resultCountries = [];
-data.forEach(country => {
-
-    if (country === null) {
-        console.error("Provided country is null.");
-        process.exit(1);
-    }
-    const countryType = typeof (country);
-    if (countryType != 'object') {
-        console.error("Malformatted country provided, country type should be 'object' but is: " + countryType);
-        process.exit(1);
-    }
-
-    if (country.name === null) {
-        console.error("Provided country.name is null.");
-        process.exit(1);
-    }
-    const countryNameType = typeof (country.name);
-    if (countryNameType != 'string') {
-        console.error(`Malformatted country.name provided, country.name type should be 'string' but is: ` + countryNameType);
-        process.exit(1);
-    }
-
-    if (country.people === null) {
-        console.error("country.people is null.");
-        process.exit(1);
-    }
-    const countryPeopleType = typeof (country.people);
-    if (countryPeopleType != 'object') {
-        console.error(`Malformatted country[${country.name}].people provided, country.people type should be 'object' but is: ` + countryPeopleType);
-        process.exit(1);
-    }
-
-    /** The result list of poeple of this country once the data has been processed.
-     * @type {List<Object.<string, string | List<Object.<string, string>>>>}
-     * */
-    const resultPeople = DataProcessor.filterPeople(country.people, animalNamesFilter, country.name, doCount)
-
-    const nPeople = resultPeople.length;
-    if (nPeople != 0) resultCountries.push({ name: doCount ? country.name + ' [' + nPeople + ']' : country.name, poeple: resultPeople });
-});
+const resultCountries = DataProcessor.filterCountries(data, animalNamesFilter, doCount);
 
 if (resultCountries.length == 0) {
     console.warn('No data to display after filtering');

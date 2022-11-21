@@ -148,6 +148,79 @@ class MalformattedPersonAnimalsError extends Error {
     }
 }
 
+/**
+ * Error thrown when a null Country is provided.
+ * */
+class NullCountryError extends Error {
+    constructor() {
+        super(`Provided country.<element> is null.`);
+        this.name = "NullCountryError";
+    }
+}
+
+/**
+ * Error thrown when a malformatted Country is provided.
+ * */
+class MalformattedCountryError extends Error {
+    /**
+     * @param {string} countryType   The type of the Country provided.
+     * */
+    constructor(countryType) {
+        super(`Malformatted country.<element> provided, country.<element> type should be 'object' but is: ` + countryType);
+        this.name = "MalformattedCountryError";
+    }
+}
+
+/**
+ * Error thrown when a null Country name is provided.
+ * */
+class NullCountryNameError extends Error {
+    constructor() {
+        super(`Provided country.name is null.`);
+        this.name = "NullCountryNameError";
+    }
+}
+
+/**
+ * Error thrown when a malformatted Country name is provided.
+ * */
+class MalformattedCountryNameError extends Error {
+    /**
+     * @param {string} countryNameType   The type of the country name provided.
+     * */
+    constructor(countryNameType) {
+        super(`Malformatted country.name provided, country.name type should be 'string' but is: ` + countryNameType);
+        this.name = "MalformattedCountryNameError";
+    }
+}
+
+/**
+ * Error thrown when a null Country people is provided.
+ * */
+class NullCountryPeopleError extends Error {
+    /**
+     * @param {string} countryName  The name of the country.
+     * */
+    constructor(countryName) {
+        super(`Provided country[${countryName}].people is null.`);
+        this.name = "NullCountryPeopleError";
+    }
+}
+
+/**
+ * Error thrown when a malformatted  people is provided.
+ * */
+class MalformattedCountryPeopleError extends Error {
+    /**
+     * @param {string} countryName         The name of the country in which the person is.
+     * @param {string} countryPeopleType   The type of the country people provided.
+     * */
+    constructor(countryName, countryPeopleType) {
+        super(`Malformatted country[${countryName}].people provided, country.people type should be 'object' but is: ` + countryPeopleType);
+        this.name = "MalformattedCountryPeopleError";
+    }
+}
+
 
 
 
@@ -196,7 +269,8 @@ function filterAnimals(animals, nameFilter, countryName, peopleName) {
 }
 
 /**
- * Filters the pople and their animals according to a filter that must contained in the name of the animal.
+ * Filters the people and their animals according to a filter that must be contained in the name of the animal.
+ * Throw NullPersonError, MalformattedPersonError, NullPersonNameError, MalformattedPersonNameError, NullPersonAnimalsError, MalformattedPersonAnimalsError.
  * @param {List<Object.<string, string | List<Object.<string, string>>>>}       people              The people to be filtered.
  * @param {string}                                                              animalNamesFilter   The filter to be applied on the animals names to check if it is contained.
  * @param {string}                                                              countryName         The name of the country in which the animal is. Usefull to debug.
@@ -259,6 +333,70 @@ function filterPeople(people, animalNamesFilter, countryName, doCount) {
     return resultPeople;
 }
 
+/* istanbul ignore next */
+/**
+ * Filters the countries and their people and their animals according to a filter that must be contained in the name of the animal.
+ * @param {List<Object.<string, string | List<Object.<string, string | List<Object.<string, string>>>>>>}       countries The countries to be filtered.
+ * @param {string}                                                                                              animalNamesFilter   The filter to be applied on the animals names to check if it is contained.
+ * @param {boolean}                                                                                             doCount             Does the number of animals filtered should be appended to the name of the poeple in the returned list.
+ * @returns {List<Object.<string, string | List<Object.<string, string | List<Object.<string, string>>>>>>}     The countries once their people and their animals have been filtered.
+ * */
+function filterCountries(countries, animalNamesFilter, doCount) {
+    /** The result list of countries once the data has been processed.
+     * @type {List<Object.<string, string | List<Object.<string, string | List<Object.<string, string>>>>>>}
+     * */
+    const resultCountries = [];
+
+    countries.forEach(country => {
+
+        if (country === null) {
+            throw new NullCountryError();
+            /* istanbul ignore next */
+            process.exit(1);
+        }
+        const countryType = typeof (country);
+        if (countryType != 'object') {
+            throw new MalformattedCountryError(countryType);
+            /* istanbul ignore next */
+            process.exit(1);
+        }
+
+        if (country.name === null) {
+            throw new NullCountryNameError();
+            /* istanbul ignore next */
+            process.exit(1);
+        }
+        const countryNameType = typeof (country.name);
+        if (countryNameType != 'string') {
+            throw new MalformattedCountryNameError(countryNameType);
+            /* istanbul ignore next */
+            process.exit(1);
+        }
+
+        if (country.people === null) {
+            throw new NullCountryPeopleError(country.name);
+            /* istanbul ignore next */
+            process.exit(1);
+        }
+        const countryPeopleType = typeof (country.people);
+        if (countryPeopleType != 'object') {
+            throw new MalformattedCountryPeopleError(country.name, countryPeopleType);
+            /* istanbul ignore next */
+            process.exit(1);
+        }
+
+        /** The result list of poeple of this country once the data has been processed.
+         * @type {List<Object.<string, string | List<Object.<string, string>>>>}
+         * */
+        const resultPeople = filterPeople(country.people, animalNamesFilter, country.name, doCount)
+
+        const nPeople = resultPeople.length;
+        if (nPeople != 0) resultCountries.push({ name: doCount ? country.name + ' [' + nPeople + ']' : country.name, people: resultPeople });
+    });
+
+    return resultCountries;
+}
+
 module.exports = {
     filterAnimals,
     NullAnimalError,
@@ -271,5 +409,12 @@ module.exports = {
     NullAnimalNameError,
     MalformattedPersonNameError,
     NullPersonAnimalsError,
-    MalformattedPersonAnimalsError
+    MalformattedPersonAnimalsError,
+    filterCountries,
+    NullCountryError,
+    MalformattedCountryError,
+    NullCountryNameError,
+    MalformattedCountryNameError,
+    NullCountryPeopleError,
+    MalformattedCountryPeopleError
 };

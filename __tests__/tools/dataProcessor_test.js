@@ -187,7 +187,7 @@ test('filterPeople does filter', () => {
     }
 });
 
-test('filterPeople does not animals when animalsNameFilter is null', () => {
+test('filterPeople does not filter animals when animalsNameFilter is null', () => {
     for (let i = 0; i < TEST_POWER; i++) {
         const size = Math.floor(Math.random() * 10);
         const filter = Math.floor(Math.random() * 1001).toString();
@@ -199,7 +199,7 @@ test('filterPeople does not animals when animalsNameFilter is null', () => {
     }
 });
 
-test('filterPeople does append count when doCount is false', () => {
+test('filterPeople does append count when doCount is true', () => {
     for (let i = 0; i < TEST_POWER; i++) {
         const size = Math.floor(Math.random() * 10);
         const people = Array(size).fill({ name: 'MockPerson', animals: Array(Math.floor(Math.random() * 10)).fill({name: 'MockAnimal'})});
@@ -215,6 +215,158 @@ test('filterPeople does NOT append count when doCount is false', () => {
         const people = Array(size).fill({ name: 'MockPerson', animals: Array(Math.floor(Math.random() * 10)).fill({ name: 'MockAnimal' }) });
         DataProcessor.filterPeople(people, null, "MockCountry", false).forEach(person => {
             expect(person.name).toEqual('MockPerson');
+        })
+    }
+});
+
+
+
+
+
+
+
+
+test('filterCountries throws when a null country', () => {
+    for (let i = 0; i < TEST_POWER; i++) {
+        const size = Math.floor(Math.random() * 1001);
+        const countries = Array(size + 2).fill({ name: 'MockCountry', people: [{ name: 'MockPerson', animals: [] }] });
+        countries[Math.floor(Math.random() * size)] = null;
+        expect(() => DataProcessor.filterCountries(countries, "mockFilter", false)).toThrow(DataProcessor.NullCountryError);
+    }
+});
+
+test('filterCountries throws when a country is number', () => {
+    for (let i = 0; i < TEST_POWER; i++) {
+        const size = Math.floor(Math.random() * 1001);
+        const countries = Array(size + 2).fill({ name: 'MockCountry', people: [{ name: 'MockPerson', animals: [] }] });
+        countries[Math.floor(Math.random() * size)] = 3;
+        expect(() => DataProcessor.filterCountries(countries, "mockFilter", false)).toThrow(DataProcessor.MalformattedCountryError);
+    }
+});
+
+test('filterCountries throws when a country is string', () => {
+    for (let i = 0; i < TEST_POWER; i++) {
+        const size = Math.floor(Math.random() * 1001);
+        const countries = Array(size + 2).fill({ name: 'MockCountry', people: [{ name: 'MockPerson', animals: [] }] });
+        countries[Math.floor(Math.random() * size)] = '3';
+        expect(() => DataProcessor.filterCountries(countries, "mockFilter", false)).toThrow(DataProcessor.MalformattedCountryError);
+    }
+});
+
+test('filterCountries throws when a country is string', () => {
+    for (let i = 0; i < TEST_POWER; i++) {
+        expect(() => DataProcessor.filterCountries(Array(Math.floor(Math.random() * 1001)).fill({ name: 'MockCountry', people: [{ name: 'MockPerson', animals: [] }] }), "mockFilter", false)).not.toThrow();
+    }
+});
+
+test('filterCountries throws when a null country name', () => {
+    for (let i = 0; i < TEST_POWER; i++) {
+        const size = Math.floor(Math.random() * 1001);
+        const countries = Array(size + 2).fill({ name: 'MockCountry', people: [{ name: 'MockPerson', animals: [] }] });
+        countries[Math.floor(Math.random() * size)] = { name: null, people: [{ name: 'MockPerson', animals: [] }] };
+        expect(() => DataProcessor.filterCountries(countries, "mockFilter", false)).toThrow(DataProcessor.NullCountryNameError);
+    }
+});
+
+test('filterCountries throws when a country name is number', () => {
+    for (let i = 0; i < TEST_POWER; i++) {
+        const size = Math.floor(Math.random() * 1001);
+        const countries = Array(size + 2).fill({ name: 'MockCountry', people: [{ name: 'MockPerson', animals: [] }] });
+        countries[Math.floor(Math.random() * size)] = { name: 3, people: [{ name: 'MockPerson', animals: [] }] };
+        expect(() => DataProcessor.filterCountries(countries, "mockFilter", false)).toThrow(DataProcessor.MalformattedCountryNameError);
+    }
+});
+
+test('filterCountries throws when a country name is object', () => {
+    for (let i = 0; i < TEST_POWER; i++) {
+        const size = Math.floor(Math.random() * 1001);
+        const countries = Array(size + 2).fill({ name: 'MockCountry', people: [{ name: 'MockPerson', animals: [] }] });
+        countries[Math.floor(Math.random() * size)] = { name: {}, people: [{ name: 'MockPerson', animals: [] }] };
+        expect(() => DataProcessor.filterCountries(countries, "mockFilter", false)).toThrow(DataProcessor.MalformattedCountryNameError);
+    }
+});
+
+test('filterCountries throws when a country people is null', () => {
+    for (let i = 0; i < TEST_POWER; i++) {
+        const size = Math.floor(Math.random() * 1001);
+        const countries = Array(size + 2).fill({ name: 'MockCountry', people: [{ name: 'MockPerson', animals: [] }] });
+        countries[Math.floor(Math.random() * size)] = { name: 'MockCountry', people: null };
+        expect(() => DataProcessor.filterCountries(countries, "mockFilter", false)).toThrow(DataProcessor.NullCountryPeopleError);
+    }
+});
+
+test('filterCountries throws when a country people is number', () => {
+    for (let i = 0; i < TEST_POWER; i++) {
+        const size = Math.floor(Math.random() * 1001);
+        const countries = Array(size + 2).fill({ name: 'MockCountry', people: [{ name: 'MockPerson', animals: [] }] });
+        countries[Math.floor(Math.random() * size)] = { name: 'MockCountry', people: 3 };
+        expect(() => DataProcessor.filterCountries(countries, "mockFilter", false)).toThrow(DataProcessor.MalformattedCountryPeopleError);
+    }
+});
+
+test('filterCountries throws when a country people is string', () => {
+    for (let i = 0; i < TEST_POWER; i++) {
+        const size = Math.floor(Math.random() * 1001);
+        const countries = Array(size + 2).fill({ name: 'MockCountry', people: [{ name: 'MockPerson', animals: [] }] });
+        countries[Math.floor(Math.random() * size)] = { name: 'MockCountry', people: '3' };
+        expect(() => DataProcessor.filterCountries(countries, "mockFilter", false)).toThrow(DataProcessor.MalformattedCountryPeopleError);
+    }
+});
+
+test('filterCountries does filter', () => {
+    for (let i = 0; i < TEST_POWER; i++) {
+        const size = Math.floor(Math.random() * 10);
+        const filter = Math.floor(Math.random() * 1001).toString();
+        const countries = Array(size + 2).fill({ name: 'MockCountry', people: [{ name: 'MockPerson', animals: [{ name: 'MockAnimal' }] }] });
+        const nFiltered = Math.floor(Math.random() * size);
+        for (let i = 0; i < nFiltered; i++)
+            countries[i] = { name: 'MockCountry', people: [{ name: 'MockPerson', animals: [{ name: filter }] }] };
+        expect(DataProcessor.filterCountries(countries, filter, false).length).toEqual(nFiltered);
+    }
+});
+
+test('filterCountries does not filter animals when animalsNameFilter is null', () => {
+    for (let i = 0; i < TEST_POWER; i++) {
+        const size = Math.floor(Math.random() * 10);
+        const filter = Math.floor(Math.random() * 1001).toString();
+        const countries = Array(size + 2).fill({ name: 'MockCountry', people: [{ name: 'MockPerson', animals: [{ name: 'MockAnimal' }] }] });
+        const nFiltered = Math.floor(Math.random() * size);
+        for (let i = 0; i < nFiltered; i++)
+            countries[i] = { name: 'MockCountry', people: [{ name: 'MockPerson', animals: [{ name: filter }] }] };
+        expect(DataProcessor.filterCountries(countries, null, false).length).toEqual(countries.length);
+    }
+});
+
+test('filterCountries does append count when doCount is true', () => {
+    for (let i = 0; i < TEST_POWER; i++) {
+        const countries = Array(Math.floor(Math.random() * 10)).fill(
+            {
+                name: 'MockCountry', people: Array(Math.floor(Math.random() * 10)).fill(
+                    {
+                        name: 'MockPerson', animals: Array(Math.floor(Math.random() * 10)).fill(
+                            { name: 'MockAnimal' })
+                    })
+            }
+        );
+        DataProcessor.filterCountries(countries, null, true).forEach(country => {
+            expect(country.name).toEqual('MockCountry [' + country.people.length + ']');
+        })
+    }
+});
+
+test('filterCountries does NOT append count when doCount is true', () => {
+    for (let i = 0; i < TEST_POWER; i++) {
+        const countries = Array(Math.floor(Math.random() * 10)).fill(
+            {
+                name: 'MockCountry', people: Array(Math.floor(Math.random() * 10)).fill(
+                    {
+                        name: 'MockPerson', animals: Array(Math.floor(Math.random() * 10)).fill(
+                            { name: 'MockAnimal' })
+                    })
+            }
+        );
+        DataProcessor.filterCountries(countries, null, false).forEach(country => {
+            expect(country.name).toEqual('MockCountry');
         })
     }
 });
