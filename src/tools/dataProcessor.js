@@ -67,6 +67,87 @@ class MalformattedAnimalNameError extends Error {
     }
 }
 
+/**
+ * Error thrown when a null Person is provided.
+ * */
+class NullPersonError extends Error {
+    /**
+     * @param {string} countryName  The name of the country in which the person is.
+     * */
+    constructor(countryName) {
+        super(`Provided country[${countryName}].people.<element> is null.`);
+        this.name = "NullPersonError";
+    }
+}
+
+/**
+ * Error thrown when a malformatted person is provided.
+ * */
+class MalformattedPersonError extends Error {
+    /**
+     * @param {string} countryName  The name of the country in which the person is.
+     * @param {string} personType   The type of the person provided.
+     * */
+    constructor(countryName, personType) {
+        super(`Malformatted country[${countryName}].people.<element> provided, country.poeple.<element> type should be 'object' but is: ` + personType);
+        this.name = "MalformattedPersonError";
+    }
+}
+
+/**
+ * Error thrown when a null Person name is provided.
+ * */
+class NullPersonNameError extends Error {
+    /**
+     * @param {string} countryName  The name of the country in which the person is.
+     * */
+    constructor(countryName) {
+        super(`Provided country[${countryName}].people.name is null.`);
+        this.name = "NullPersonNameError";
+    }
+}
+
+/**
+ * Error thrown when a malformatted person name is provided.
+ * */
+class MalformattedPersonNameError extends Error {
+    /**
+     * @param {string} countryName      The name of the country in which the person is.
+     * @param {string} personNameType   The type of the person name provided.
+     * */
+    constructor(countryName, personNameType) {
+        super(`Malformatted country[${countryName}].people.name provided, country.poeple.name type should be 'string' but is: ` + personNameType);
+        this.name = "MalformattedPersonNameError";
+    }
+}
+
+/**
+ * Error thrown when a null Person animals is provided.
+ * */
+class NullPersonAnimalsError extends Error {
+    /**
+     * @param {string} countryName  The name of the country in which the person is.
+     * */
+    constructor(countryName) {
+        super(`Provided country[${countryName}].people.animals is null.`);
+        this.name = "NullPersonAnimalsError";
+    }
+}
+
+/**
+ * Error thrown when a malformatted person animals is provided.
+ * */
+class MalformattedPersonAnimalsError extends Error {
+    /**
+     * @param {string} countryName         The name of the country in which the person is.
+     * @param {string} personAnimalsType   The type of the person animals provided.
+     * */
+    constructor(countryName, personAnimalsType) {
+        super(`Malformatted country[${countryName}].people.animals provided, country.poeple.animals type should be 'object' but is: ` + personAnimalsType);
+        this.name = "MalformattedPersonAnimalsError";
+    }
+}
+
 
 
 
@@ -75,14 +156,13 @@ class MalformattedAnimalNameError extends Error {
 ///////////////
 
 /**
- * Check the number of program arguments used.
- * Does not take in count the unnecessary two first.
- * Throws an InvalidNumberOfArgumentsError if nMinimumArgs is not null and the number of arguments provided is lesser, or if nMaximumArgs is not null and the number of arguments provided is greater.
- * Throws an InvalidArgumentsListError if programArgumentsProvider is null or fails to produce arguments.
- * @param {list<string>} programArgumentsProvider The program arguments provider. Must implement a 'provideProgramArguments()' method returning a list of strings.
- * @param {number} nMininmumArgs The minimum number of arguments expected. Can be null if no mininmum.
- * @param {number} nMininmumArgs The minimum number of arguments expected. Can be null if no maximum.
- * @returns {list<string>} The program arguments minus the two first.
+ * Filters the animals according to a filter that must contained in the name of the animal.
+ * Throws an NullAnimalError, MalformattedAnimalError, NullAnimalNameError, MalformattedAnimalNameError.
+ * @param {List<Object.<string, string>>}       animals     The animals to be filtered.
+ * @param {string}                              nameFilter  The filter to be applied on the animals names to check if it is contained.
+ * @param {string}                              countryName The name of the country in which the animal is. Usefull to debug.
+ * @param {string}                              peopleName  The name of the person owning the animal. Usefull to debug.
+ * @returns {List<Object.<string, string>>}     The animals once filtered.
  * */
 function filterAnimals(animals, nameFilter, countryName, peopleName) {
 
@@ -115,4 +195,81 @@ function filterAnimals(animals, nameFilter, countryName, peopleName) {
     });
 }
 
-module.exports = { filterAnimals, NullAnimalError, MalformattedAnimalError, NullAnimalNameError, MalformattedAnimalNameError };
+/**
+ * Filters the pople and their animals according to a filter that must contained in the name of the animal.
+ * @param {List<Object.<string, string | List<Object.<string, string>>>>}       people              The people to be filtered.
+ * @param {string}                                                              animalNamesFilter   The filter to be applied on the animals names to check if it is contained.
+ * @param {string}                                                              countryName         The name of the country in which the animal is. Usefull to debug.
+ * @param {boolean}                                                             doCount             Does the number of animals filtered should be appended to the name of the poeple in the returned list.
+ * @returns {List<Object.<string, string | List<Object.<string, string>>>>}     The poeple once their animals have been filtered.
+ * */
+function filterPeople(people, animalNamesFilter, countryName, doCount) {
+
+    /** The result list of poeple once the their animals have been processed.
+     * @type {List<Object.<string, string | List<Object.<string, string>>>>}
+     * */
+    const resultPeople = [];
+
+    people.forEach(person => {
+
+        if (person === null) {
+            throw new NullPersonError(countryName);
+            /* istanbul ignore next */
+            process.exit(1);
+        }
+        const peopleType = typeof (person);
+        if (peopleType != 'object') {
+            throw new MalformattedPersonError(countryName, peopleType);
+            /* istanbul ignore next */
+            process.exit(1);
+        }
+
+        if (person.name === null) {
+            throw new NullPersonNameError(countryName);
+            /* istanbul ignore next */
+            process.exit(1);
+        }
+        const peopleNameType = typeof (person.name);
+        if (peopleNameType != 'string') {
+            throw new MalformattedPersonNameError(countryName, peopleNameType);
+            /* istanbul ignore next */
+            process.exit(1);
+        }
+
+        if (person.animals === null) {
+            throw new NullPersonAnimalsError(countryName);
+            /* istanbul ignore next */
+            process.exit(1);
+        }
+        const peopleAnimalsType = typeof (person.animals);
+        if (peopleAnimalsType != 'object') {
+            throw new MalformattedPersonAnimalsError(countryName, peopleAnimalsType);
+            /* istanbul ignore next */
+            process.exit(1);
+        }
+
+        /** The result list of animals of that person of this country once the data has been processed.
+         * @type {List<Object.<string, string>>}
+         * */
+        const resultAnimals = animalNamesFilter ? filterAnimals(person.animals, animalNamesFilter, countryName, person.name) : person.animals;
+        const nAnimals = resultAnimals.length;
+        if (nAnimals != 0) resultPeople.push({ name: doCount ? person.name + ' [' + nAnimals + ']' : person.name, animals: resultAnimals });
+    });
+
+    return resultPeople;
+}
+
+module.exports = {
+    filterAnimals,
+    NullAnimalError,
+    MalformattedAnimalError,
+    NullAnimalNameError,
+    MalformattedAnimalNameError,
+    filterPeople,
+    NullPersonError,
+    MalformattedPersonError,
+    NullAnimalNameError,
+    MalformattedPersonNameError,
+    NullPersonAnimalsError,
+    MalformattedPersonAnimalsError
+};

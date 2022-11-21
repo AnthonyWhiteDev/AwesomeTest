@@ -254,46 +254,8 @@ data.forEach(country => {
     /** The result list of poeple of this country once the data has been processed.
      * @type {List<Object.<string, string | List<Object.<string, string>>>>}
      * */
-    const resultPeople = [];
-    country.people.forEach(people => {
+    const resultPeople = DataProcessor.filterPeople(country.people, animalNamesFilter, country.name, doCount)
 
-        if (people === null) {
-            console.error(`Provided country[${country.name}].people.<element> is null.`);
-            process.exit(1);
-        }
-        const peopleType = typeof (people);
-        if (peopleType != 'object') {
-            console.error(`Malformatted country[${country.name}].people.<element> provided, country.poeple.<element> type should be 'object' but is: ` + peopleType);
-            process.exit(1);
-        }
-
-        if (people.name === null) {
-            console.error(`Provided country[${country.name}].people.name is null.`);
-            process.exit(1);
-        }
-        const peopleNameType = typeof (people.name);
-        if (peopleNameType != 'string') {
-            console.error(`Malformatted country[${country.name}].people.name provided, country.poeple.name type should be 'string' but is: ` + peopleNameType);
-            process.exit(1);
-        }
-
-        if (people.animals === null) {
-            console.error(`Provided country[${country.name}].people[${people.name}].animals is null.`);
-            process.exit(1);
-        }
-        const peopleAnimalsType = typeof (people.animals);
-        if (peopleAnimalsType != 'object') {
-            console.error(`Malformatted country[${country.name}].people[${people.name}].animals provided, country.people.animals type should be 'object' but is: ` + peopleAnimalsType);
-            process.exit(1);
-        }
-
-        /** The result list of animals of that person of this country once the data has been processed.
-         * @type {List<Object.<string, string>>}
-         * */
-        const resultAnimals = animalNamesFilter ? DataProcessor.filterAnimals(people.animals, animalNamesFilter) : people.animals;
-        const nAnimals = resultAnimals.length;
-        if (nAnimals != 0) resultPeople.push({ name: doCount ? people.name + ' [' + nAnimals + ']' : people.name, animals: resultAnimals });
-    });
     const nPeople = resultPeople.length;
     if (nPeople != 0) resultCountries.push({ name: doCount ? country.name + ' [' + nPeople + ']' : country.name, poeple: resultPeople });
 });
