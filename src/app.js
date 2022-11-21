@@ -222,7 +222,7 @@ const resultCountries = DataProcessor.filterCountries(data, animalNamesFilter, d
 
 if (resultCountries.length == 0) {
     console.warn('No data to display after filtering');
-    process.exit(1);
+    process.exit(0);
 }
 
 console.log(JSON.stringify(resultCountries, null, 2));

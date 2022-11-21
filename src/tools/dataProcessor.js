@@ -1,7 +1,5 @@
 'use strict';
 
-const Logger = require('./logger');
-
 
 
 
@@ -57,8 +55,8 @@ class NullAnimalNameError extends Error {
  * */
 class MalformattedAnimalNameError extends Error {
     /**
-     * @param {string} countryName  The name of the country in which the animal is.
-     * @param {string} personName   The name of the person owning the animal.
+     * @param {string} countryName      The name of the country in which the animal is.
+     * @param {string} personName       The name of the person owning the animal.
      * @param {string} animalNameType   The type of the animal provided.
      * */
     constructor(countryName, peopleName, animalNameType) {
@@ -231,11 +229,11 @@ class MalformattedCountryPeopleError extends Error {
 /**
  * Filters the animals according to a filter that must contained in the name of the animal.
  * Throws an NullAnimalError, MalformattedAnimalError, NullAnimalNameError, MalformattedAnimalNameError.
- * @param {List<Object.<string, string>>}       animals     The animals to be filtered.
- * @param {string}                              nameFilter  The filter to be applied on the animals names to check if it is contained.
- * @param {string}                              countryName The name of the country in which the animal is. Usefull to debug.
- * @param {string}                              peopleName  The name of the person owning the animal. Usefull to debug.
- * @returns {List<Object.<string, string>>}     The animals once filtered.
+ * @param   {List<Object.<string, string>>}       animals     The animals to be filtered.
+ * @param   {string}                              nameFilter  The filter to be applied on the animals names to check if it is contained.
+ * @param   {string}                              countryName The name of the country in which the animal is. Usefull to debug.
+ * @param   {string}                              peopleName  The name of the person owning the animal. Usefull to debug.
+ * @returns {List<Object.<string, string>>}                   The animals once filtered.
  * */
 function filterAnimals(animals, nameFilter, countryName, peopleName) {
 
@@ -271,11 +269,11 @@ function filterAnimals(animals, nameFilter, countryName, peopleName) {
 /**
  * Filters the people and their animals according to a filter that must be contained in the name of the animal.
  * Throw NullPersonError, MalformattedPersonError, NullPersonNameError, MalformattedPersonNameError, NullPersonAnimalsError, MalformattedPersonAnimalsError.
- * @param {List<Object.<string, string | List<Object.<string, string>>>>}       people              The people to be filtered.
- * @param {string}                                                              animalNamesFilter   The filter to be applied on the animals names to check if it is contained.
- * @param {string}                                                              countryName         The name of the country in which the animal is. Usefull to debug.
- * @param {boolean}                                                             doCount             Does the number of animals filtered should be appended to the name of the poeple in the returned list.
- * @returns {List<Object.<string, string | List<Object.<string, string>>>>}     The poeple once their animals have been filtered.
+ * @param   {List<Object.<string, string | List<Object.<string, string>>>>}       people              The people to be filtered.
+ * @param   {string}                                                              animalNamesFilter   The filter to be applied on the animals names to check if it is contained.
+ * @param   {string}                                                              countryName         The name of the country in which the animal is. Usefull to debug.
+ * @param   {boolean}                                                             doCount             Does the number of animals filtered should be appended to the name of the poeple in the returned list.
+ * @returns {List<Object.<string, string | List<Object.<string, string>>>>}                           The poeple once their animals have been filtered.
  * */
 function filterPeople(people, animalNamesFilter, countryName, doCount) {
 
@@ -336,10 +334,10 @@ function filterPeople(people, animalNamesFilter, countryName, doCount) {
 /* istanbul ignore next */
 /**
  * Filters the countries and their people and their animals according to a filter that must be contained in the name of the animal.
- * @param {List<Object.<string, string | List<Object.<string, string | List<Object.<string, string>>>>>>}       countries The countries to be filtered.
- * @param {string}                                                                                              animalNamesFilter   The filter to be applied on the animals names to check if it is contained.
- * @param {boolean}                                                                                             doCount             Does the number of animals filtered should be appended to the name of the poeple in the returned list.
- * @returns {List<Object.<string, string | List<Object.<string, string | List<Object.<string, string>>>>>>}     The countries once their people and their animals have been filtered.
+ * @param   {List<Object.<string, string | List<Object.<string, string | List<Object.<string, string>>>>>>}       countries The countries to be filtered.
+ * @param   {string}                                                                                              animalNamesFilter   The filter to be applied on the animals names to check if it is contained.
+ * @param   {boolean}                                                                                             doCount             Does the number of animals filtered should be appended to the name of the poeple in the returned list.
+ * @returns {List<Object.<string, string | List<Object.<string, string | List<Object.<string, string>>>>>>}                           The countries once their people and their animals have been filtered.
  * */
 function filterCountries(countries, animalNamesFilter, doCount) {
     /** The result list of countries once the data has been processed.

@@ -96,10 +96,10 @@ class ActualProgramArgumentsProvider extends ProgramArgumentsProvider {
  * Does not take in count the unnecessary two first.
  * Throws an InvalidNumberOfArgumentsError if nMinimumArgs is not null and the number of arguments provided is lesser, or if nMaximumArgs is not null and the number of arguments provided is greater.
  * Throws an InvalidArgumentsListError if programArgumentsProvider is null or fails to produce arguments.
- * @param {list<string>} programArgumentsProvider The program arguments provider. Must implement a 'provideProgramArguments()' method returning a list of strings.
- * @param {number} nMininmumArgs The minimum number of arguments expected. Can be null if no mininmum.
- * @param {number} nMininmumArgs The minimum number of arguments expected. Can be null if no maximum.
- * @returns {list<string>} The program arguments minus the two first.
+ * @param   {list<string>} programArgumentsProvider The program arguments provider. Must implement a 'provideProgramArguments()' method returning a list of strings.
+ * @param   {number} nMininmumArgs                  The minimum number of arguments expected. Can be null if no mininmum.
+ * @param   {number} nMininmumArgs                  The minimum number of arguments expected. Can be null if no maximum.
+ * @returns {list<string>}                          The program arguments minus the two first.
  * */
 function getProgramArguments(programArgumentsProvider, nMinimumArgs = null, nMaximumArgs = null) {
     let argv;
