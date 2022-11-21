@@ -1,6 +1,6 @@
 # AwesomeTest
 
-![CI badge](https://img.shields.io/badge/CI-pass-green?style=for-the-badge) ![Coverage badge](https://img.shields.io/badge/coverage-100-green?style=for-the-badge)
+![CI badge](https://img.shields.io/badge/CI-pass-green?style=for-the-badge) ![Coverage badge](https://img.shields.io/badge/COVERAGE-100%25-green?style=for-the-badge)
 
 ## Table of Content
 
@@ -78,18 +78,28 @@ At least one of those two options must be used. No particular order in the usage
 ## Usage
 `node src/app.js [--filter=<value>] [--count] [--help]`  
 
-### Options
+#### Options:
 
-- `--filter=<value>` Filter the animals to be considering by this filter. Only the animals those names contain this string will be considered. The `<value>` of the `--filter` option must be a string.  
+- `--filter=<value>` Filter the animals to be considered by this `<value>`. Only the animals whose names contain this string will be considered. The `<value>` of the `--filter` option must be a string.  
 
-- `--count` Displays the count of elements under an element (animals for a person, people for a country). The `--count` option does not take any additionnal value.
+- `--count` Displays the count of elements under a parent element (animals for a person, people for a country) by appending it to the name of the parent. The `--count` option does not take any additionnal value.
 
-- `--help` Displays this message.
+- `--help` Displays the help message.
 
 Please provide at least one of those options and maximum 2. `--filter` and `--count` can be combined.
+
+#### Example:
+
+`node src/app.js --filter=ry --count`  
 
 ## Lint
 `npx eslint src/ __tests__/`
 
 ## Test
 `npm test`
+
+## Environment variables
+
+- `DEBUG` Set this to 1 in order to activate some debug logs. Any other value will deactivate them.
+
+- `TESTPOWER` Set this number to represent the number of times that randomzed tests will be run. Default is 100.

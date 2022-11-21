@@ -4,6 +4,7 @@
 
 const Logger = require('../src/tools/logger');
 const ArgsChecker = require('../src/tools/argsChecker');
+const DataProcessor = require('./tools/dataProcessor');
 
 
 
@@ -54,7 +55,8 @@ if ((helpType !== 'undefined') && (helpType !== 'boolean')) {
 }
 Logger.debug(`help = ${help}`);
 if (help) {
-    console.log(`This application processes the data found in the file './ data.js.txt'. This data must be formatted as this example:  
+    console.log(`This application processes the data found in the file './ data.js.txt'. This data must be formatted as this example:
+
 '''javascript
 const data = [{
     name: 'Dillauti',
@@ -116,27 +118,38 @@ The processing can have two roles:
 * Filtering the elements according to the '--filter' option, if used;
 * Counting the elements if the option '--count' is used.
 
-At least one of those two options must be used. No particular order in the usage of the options is needed.
 
-## Usage
-'node src/app.js [--filter=<value>] [--count] [--help]'
+# Usage
+node src/app.js [--filter=<value>] [--count] [--help]
 
-### Options
+Options:
 
-* '--filter = <value>' Filter the animals to be considering by this filter. Only the animals those names contain this string will be considered. The '<value>' of the '--filter' option must be a string.
+* --filter=<value>      Filter the animals to be considering by this <value>. Only the animals whose names contain this string will be considered. The '<value>' of the '--filter' option must be a string.
 
-* '--count' Displays the count of elements under an element(animals for a person, people for a country).The '--count' option does not take any additionnal value.
+* --count               Displays the count of elements under a parent element (animals for a person, people for a country) by appending it to the name of the parent.The '--count' option does not take any additionnal value.
 
-* '--help' Displays this message.
+* --help                Displays this message and ends the program.
 
-Please provide at least one of those options and maximum 2. '--filter' and '--count' can be combined.
+Please provide at least one of those options and maximum 2.
+--filter and --count can be combined in any order. 
+
+Example:
+node src/app.js --filter=ry --count
 
 
-## Lint
-'npx eslint src/ __tests__/''
+# Lint
+npx eslint src/ __tests__/
 
-## Test
-'npm test'`);
+
+# Test
+npm test
+
+
+# Environment variables
+
+- 'DEBUG'       Set this to 1 in order to activate some debug logs. Any other value will deactivate them.
+
+- 'TESTPOWER'   Set this number to represent the number of times that randomzed tests will be run. Default is 100.`);
     process.exit(0);
 }
 
@@ -205,109 +218,7 @@ if (dataType != 'object') {
 /** The result list of countries once the data has been processed.
  * @type {List<Object.<string, string | List<Object.<string, string | List<Object.<string, string>>>>>>}
  * */
-const resultCountries = [];
-data.forEach(country => {
-
-    if (country === null) {
-        console.error("Provided country is null.");
-        process.exit(1);
-    }
-    const countryType = typeof (country);
-    if (countryType != 'object') {
-        console.error("Malformatted country provided, country type should be 'object' but is: " + countryType);
-        process.exit(1);
-    }
-
-    if (country.name === null) {
-        console.error("Provided country.name is null.");
-        process.exit(1);
-    }
-    const countryNameType = typeof (country.name);
-    if (countryNameType != 'string') {
-        console.error(`Malformatted country.name provided, country.name type should be 'string' but is: ` + countryNameType);
-        process.exit(1);
-    }
-
-    if (country.people === null) {
-        console.error("country.people is null.");
-        process.exit(1);
-    }
-    const countryPeopleType = typeof (country.people);
-    if (countryPeopleType != 'object') {
-        console.error(`Malformatted country[${country.name}].people provided, country.people type should be 'object' but is: ` + countryPeopleType);
-        process.exit(1);
-    }
-
-    /** The result list of poeple of this country once the data has been processed.
-     * @type {List<Object.<string, string | List<Object.<string, string>>>>}
-     * */
-    const resultPeople = [];
-    country.people.forEach(people => {
-
-        if (people === null) {
-            console.error(`Provided country[${country.name}].people.<element> is null.`);
-            process.exit(1);
-        }
-        const peopleType = typeof (people);
-        if (peopleType != 'object') {
-            console.error(`Malformatted country[${country.name}].people.<element> provided, country.poeple.<element> type should be 'object' but is: ` + peopleType);
-            process.exit(1);
-        }
-
-        if (people.name === null) {
-            console.error(`Provided country[${country.name}].people.name is null.`);
-            process.exit(1);
-        }
-        const peopleNameType = typeof (people.name);
-        if (peopleNameType != 'string') {
-            console.error(`Malformatted country[${country.name}].people.name provided, country.poeple.name type should be 'string' but is: ` + peopleNameType);
-            process.exit(1);
-        }
-
-        if (people.animals === null) {
-            console.error(`Provided country[${country.name}].people[${people.name}].animals is null.`);
-            process.exit(1);
-        }
-        const peopleAnimalsType = typeof (people.animals);
-        if (peopleAnimalsType != 'object') {
-            console.error(`Malformatted country[${country.name}].people[${people.name}].animals provided, country.people.animals type should be 'object' but is: ` + peopleAnimalsType);
-            process.exit(1);
-        }
-
-        /** The result list of animals of that person of this country once the data has been processed.
-         * @type {List<Object.<string, string>>}
-         * */
-        const resultAnimals = animalNamesFilter ? people.animals.filter(animal => {
-
-            if (animal === null) {
-                console.error(`Provided country[${country.name}].people[${people.name}].animals.<element> is null.`);
-                process.exit(1);
-            }
-            const animalType = typeof (animal);
-            if (animalType != 'object') {
-                console.error(`Malformatted country[${country.name}].people[${people.name}].animals.<element> provided, country.people.animals.<element> type should be 'object' but is: ` + animalType);
-                process.exit(1);
-            }
-
-            if (animal.name === null) {
-                console.error(`Provided country[${country.name}].people[${people.name}].animals.name is null.`);
-                process.exit(1);
-            }
-            const animalNameType = typeof (animal.name);
-            if (animalNameType != 'string') {
-                console.error(`Malformatted country[${country.name}].people[${people.name}].animals.name provided, country.people.animals.name type should be 'string' but is: ` + animalNameType);
-                process.exit(1);
-            }
-
-            return animal.name.includes(animalNamesFilter)
-        }
-        ) : people.animals;
-        const nAnimals = resultAnimals.length;
-        if (nAnimals != 0) resultPeople.push({ name: doCount ? people.name + ' [' + nAnimals + ']' : people.name, animals: resultAnimals });
-    });
-    const nPeople = resultPeople.length;
-    if (nPeople != 0) resultCountries.push({ name: doCount ? country.name + ' [' + nPeople + ']' : country.name, poeple: resultPeople });
-});
+const resultCountries = DataProcessor.filterCountries(data, animalNamesFilter, doCount);
 
 if (resultCountries.length == 0) {
     console.warn('No data to display after filtering');
